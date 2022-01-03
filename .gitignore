@@ -32,4 +32,7 @@ build/
 ### VS Code ###
 .vscode/
 application.yml
+.mvn/
+secure-connect.zip
+
 
