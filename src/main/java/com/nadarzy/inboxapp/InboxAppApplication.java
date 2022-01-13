@@ -8,6 +8,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.cassandra.CqlSessionBuilderCustomizer;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 
 import javax.annotation.PostConstruct;
@@ -16,11 +17,14 @@ import java.nio.file.Path;
 @SpringBootApplication
 @EnableConfigurationProperties(DatastaxAstraProperties.class)
 public class InboxAppApplication {
-
   @Autowired FolderRepository folderRepository;
 
   public static void main(String[] args) {
-    SpringApplication.run(InboxAppApplication.class, args);
+    ConfigurableApplicationContext applicationContext =
+        SpringApplication.run(InboxAppApplication.class, args);
+    //    System.out.println("########### hi");
+    //    folderRepository = applicationContext.getBean(FolderRepository.class);
+    //    System.out.println("####################" + folderRepository);
   }
 
   //    @RequestMapping("/user")
@@ -37,9 +41,12 @@ public class InboxAppApplication {
   }
 
   @PostConstruct
-  public void init() {
+  public void initData() throws InterruptedException {
+    Thread.sleep(2000);
+    //
     folderRepository.save(new Folder("JulianN", "Inbox", "blue"));
     folderRepository.save(new Folder("JulianN", "Sent", "green"));
     folderRepository.save(new Folder("JulianN", "Important", "yellow"));
+    folderRepository.findAll().forEach(System.out::println);
   }
 }
