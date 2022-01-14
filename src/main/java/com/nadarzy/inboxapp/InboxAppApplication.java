@@ -41,8 +41,8 @@ public class InboxAppApplication {
   }
 
   @PostConstruct
-  public void initData() throws InterruptedException {
-    Thread.sleep(2000);
+  public void initData() {
+
     //
     folderRepository.save(new Folder("JulianN", "Inbox", "blue"));
     folderRepository.save(new Folder("JulianN", "Sent", "green"));

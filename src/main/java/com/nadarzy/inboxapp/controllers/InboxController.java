@@ -2,6 +2,7 @@ package com.nadarzy.inboxapp.controllers;
 
 import com.nadarzy.inboxapp.folders.Folder;
 import com.nadarzy.inboxapp.folders.FolderRepository;
+import com.nadarzy.inboxapp.folders.FolderService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
@@ -15,9 +16,11 @@ import java.util.List;
 @Controller
 public class InboxController {
   private final FolderRepository folderRepository;
+  private final FolderService folderService;
 
-  public InboxController(FolderRepository folderRepository) {
+  public InboxController(FolderRepository folderRepository, FolderService folderService) {
     this.folderRepository = folderRepository;
+    this.folderService = folderService;
   }
 
   @GetMapping("/")
@@ -28,6 +31,8 @@ public class InboxController {
       String userName = principal.getAttribute("name");
       List<Folder> userFolders = folderRepository.findAllById(userName);
       model.addAttribute("userFolders", userFolders);
+      List<Folder> defaultFolders = folderService.fetchDefaultFolders(userName);
+      model.addAttribute("defaultFolders", defaultFolders);
 
       return "inbox-page";
     }
