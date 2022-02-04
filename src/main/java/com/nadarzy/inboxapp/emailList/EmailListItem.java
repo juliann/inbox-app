@@ -1,5 +1,6 @@
 package com.nadarzy.inboxapp.emailList;
 
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.cassandra.core.mapping.CassandraType;
 import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
@@ -22,6 +23,16 @@ public class EmailListItem {
 
   @CassandraType(type = Name.BOOLEAN)
   private boolean isUnread;
+
+  @Transient private String timeSent;
+
+  public String getTimeSent() {
+    return timeSent;
+  }
+
+  public void setTimeSent(String timeSent) {
+    this.timeSent = timeSent;
+  }
 
   public EmailListItemPKey getId() {
     return id;
