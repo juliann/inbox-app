@@ -1,5 +1,6 @@
 package com.nadarzy.inboxapp.controllers;
 
+import com.nadarzy.inboxapp.emailList.EmailListItem;
 import com.nadarzy.inboxapp.emailList.EmailListItemRepository;
 import com.nadarzy.inboxapp.folders.Folder;
 import com.nadarzy.inboxapp.folders.FolderRepository;
@@ -44,6 +45,11 @@ public class InboxController {
 
       // fetch messages
 
+      String folderLabel = "Inbox";
+      List<EmailListItem> emailList =
+          emailListItemRepository.findAllById_UserIdAndId_Label(userName, folderLabel);
+
+      model.addAttribute("emailList", emailList);
       return "inbox-page";
     }
   }
