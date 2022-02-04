@@ -1,5 +1,6 @@
 package com.nadarzy.inboxapp.controllers;
 
+import com.nadarzy.inboxapp.emailList.EmailListItemRepository;
 import com.nadarzy.inboxapp.folders.Folder;
 import com.nadarzy.inboxapp.folders.FolderRepository;
 import com.nadarzy.inboxapp.folders.FolderService;
@@ -17,10 +18,15 @@ import java.util.List;
 public class InboxController {
   private final FolderRepository folderRepository;
   private final FolderService folderService;
+  private final EmailListItemRepository emailListItemRepository;
 
-  public InboxController(FolderRepository folderRepository, FolderService folderService) {
+  public InboxController(
+      FolderRepository folderRepository,
+      FolderService folderService,
+      EmailListItemRepository emailListItemRepository) {
     this.folderRepository = folderRepository;
     this.folderService = folderService;
+    this.emailListItemRepository = emailListItemRepository;
   }
 
   @GetMapping("/")
@@ -29,10 +35,14 @@ public class InboxController {
       return "index";
     } else {
       String userName = principal.getAttribute("name");
+
+      // fetch folders
       List<Folder> userFolders = folderRepository.findAllById(userName);
       model.addAttribute("userFolders", userFolders);
       List<Folder> defaultFolders = folderService.fetchDefaultFolders(userName);
       model.addAttribute("defaultFolders", defaultFolders);
+
+      // fetch messages
 
       return "inbox-page";
     }

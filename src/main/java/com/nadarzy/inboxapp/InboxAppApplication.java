@@ -1,6 +1,10 @@
 package com.nadarzy.inboxapp;
 
+import com.datastax.oss.driver.api.core.uuid.Uuids;
 import com.nadarzy.inboxapp.connection.DatastaxAstraProperties;
+import com.nadarzy.inboxapp.emailList.EmailListItem;
+import com.nadarzy.inboxapp.emailList.EmailListItemPKey;
+import com.nadarzy.inboxapp.emailList.EmailListItemRepository;
 import com.nadarzy.inboxapp.folders.Folder;
 import com.nadarzy.inboxapp.folders.FolderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,11 +17,13 @@ import org.springframework.context.annotation.Bean;
 
 import javax.annotation.PostConstruct;
 import java.nio.file.Path;
+import java.util.List;
 
 @SpringBootApplication
 @EnableConfigurationProperties(DatastaxAstraProperties.class)
 public class InboxAppApplication {
   @Autowired FolderRepository folderRepository;
+  @Autowired EmailListItemRepository emailListItemRepository;
 
   public static void main(String[] args) {
     ConfigurableApplicationContext applicationContext =
@@ -48,5 +54,20 @@ public class InboxAppApplication {
     folderRepository.save(new Folder("JulianN", "Sent", "green"));
     folderRepository.save(new Folder("JulianN", "Important", "yellow"));
     folderRepository.findAll().forEach(System.out::println);
+
+    for (int i = 0; i < 10; i++) {
+      EmailListItemPKey key = new EmailListItemPKey();
+      key.setUserId("JulianN");
+      key.setLabel("Inbox");
+      key.setTimeId(Uuids.timeBased());
+
+      EmailListItem item = new EmailListItem();
+      item.setId(key);
+      item.setTo(List.of("JulianN"));
+      item.setSubject("Subject" + i);
+      item.setUnread(true);
+
+      emailListItemRepository.save(item);
+    }
   }
 }
