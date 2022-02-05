@@ -15,7 +15,7 @@ public class EmailListItemPKey {
   @PrimaryKeyColumn(name = "label", ordinal = 1, type = PrimaryKeyType.PARTITIONED)
   private String label;
 
-  @PrimaryKeyColumn(name = "crated_time_uuid", ordinal = 2, type = PrimaryKeyType.CLUSTERED)
+  @PrimaryKeyColumn(name = "created_time_uuid", ordinal = 2, type = PrimaryKeyType.CLUSTERED)
   private UUID timeId;
 
   public String getUserId() {

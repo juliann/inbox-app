@@ -2,6 +2,8 @@ package com.nadarzy.inboxapp;
 
 import com.datastax.oss.driver.api.core.uuid.Uuids;
 import com.nadarzy.inboxapp.connection.DatastaxAstraProperties;
+import com.nadarzy.inboxapp.email.Email;
+import com.nadarzy.inboxapp.email.EmailRepository;
 import com.nadarzy.inboxapp.emailList.EmailListItem;
 import com.nadarzy.inboxapp.emailList.EmailListItemPKey;
 import com.nadarzy.inboxapp.emailList.EmailListItemRepository;
@@ -24,6 +26,7 @@ import java.util.List;
 public class InboxAppApplication {
   @Autowired FolderRepository folderRepository;
   @Autowired EmailListItemRepository emailListItemRepository;
+  @Autowired EmailRepository emailRepository;
 
   public static void main(String[] args) {
     ConfigurableApplicationContext applicationContext =
@@ -68,6 +71,15 @@ public class InboxAppApplication {
       item.setUnread(true);
 
       emailListItemRepository.save(item);
+
+      Email email = new Email();
+      email.setId(key.getTimeId());
+      email.setFrom("JulianN");
+      email.setTo(item.getTo());
+      email.setBody("Body" + i);
+      email.setSubject(item.getSubject());
+
+      emailRepository.save(email);
     }
   }
 }
