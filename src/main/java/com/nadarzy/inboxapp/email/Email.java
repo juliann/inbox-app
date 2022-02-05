@@ -1,5 +1,6 @@
 package com.nadarzy.inboxapp.email;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
 import org.springframework.data.cassandra.core.mapping.CassandraType;
 import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
@@ -11,6 +12,7 @@ import java.util.UUID;
 /** @author Julian Nadarzy on 05/02/2022 */
 @Table(value = "messages_by_id")
 public class Email {
+  @Id
   @PrimaryKeyColumn(name = "id", ordinal = 0, type = PrimaryKeyType.PARTITIONED)
   private UUID id;
 

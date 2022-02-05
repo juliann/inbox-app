@@ -19,7 +19,7 @@ import org.springframework.context.annotation.Bean;
 
 import javax.annotation.PostConstruct;
 import java.nio.file.Path;
-import java.util.List;
+import java.util.Arrays;
 
 @SpringBootApplication
 @EnableConfigurationProperties(DatastaxAstraProperties.class)
@@ -66,7 +66,7 @@ public class InboxAppApplication {
 
       EmailListItem item = new EmailListItem();
       item.setId(key);
-      item.setTo(List.of("JulianN"));
+      item.setTo(Arrays.asList("JulianN", "abc", "def"));
       item.setSubject("Subject" + i);
       item.setUnread(true);
 

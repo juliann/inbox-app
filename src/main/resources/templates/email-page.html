@@ -8,10 +8,76 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
             integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
             crossorigin="anonymous"></script>
+    <style>
+        .container {
+            display: grid;
+
+            grid-template-areas:
+          "header header header"
+          "nav content content"
+          "footer footer footer";
+
+            grid-template-columns: 300px 1fr;
+            grid-template-rows: auto 1fr auto;
+            grid-gap: 10px;
+
+            height: 100vh;
+        }
+
+        header {
+            grid-area: header;
+        }
+
+        nav {
+            grid-area: nav;
+            margin-left: 0.5rem;
+        }
+
+        main {
+            grid-area: content;
+        }
+
+        footer {
+            grid-area: footer;
+        }
+    </style>
 </head>
 <body>
+<nav>
+    <div class="card">
+        <a href="/compose" class="btn btn-primary">Compose message</a>
+    </div>
+    <div
+            th:insert="components/folder-list :: folder-list (panelName = 'Folders', folders = ${defaultFolders} )"
+    ></div>
+    <div
+            th:insert="components/folder-list :: folder-list (panelName = 'My folders', folders = ${userFolders})"
+    ></div>
+</nav>
 <main>
-    <div class="card" th:if="${email}"></div>
+
+
+    <div class="card" th:if="${email}">
+        <div class="card-header">
+            View Email
+        </div>
+        <div class="card-body">
+            <dl>
+                <dt>From</dt>
+                <dd th:text="${email.from}"></dd>
+
+                <dt>To</dt>
+                <dd th:text="${email.to}"></dd>
+
+                <dt>Subject</dt>
+                <dd th:text="${email.subject}"></dd>
+
+                <dt>Body</dt>
+                <dd th:text="${toIds}"></dd>
+            </dl>
+
+        </div>
+    </div>
 </main>
 </body>
 </html>
