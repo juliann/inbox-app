@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Email</title>
+    <title>Compose new Email</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
@@ -43,7 +43,6 @@
     </style>
 </head>
 <body>
-
 <div class="container">
     <header>
         <h1>Welcome, Name</h1>
@@ -62,32 +61,33 @@
     <main>
 
 
-        <div class="card" th:if="${email}">
+        <div class="card">
             <div class="card-header">
-                View Email
+                Compose new Email
             </div>
             <div>
-                <div class="card-body">
-                    <dl>
-                        <dt>From</dt>
-                        <dd th:text="${email.from}"></dd>
+                <dl class="card-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="toIds" class="form-label">To</label>
+                            <input type="text" th:value="${toIds}" class="form-control" id="toIds"
+                                   aria-describedby="toIdHelp">
+                            <div id="toIdHelp" class="form-text">Enter comma seperated GitHub Ids of your mail
+                                recipients
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="subject" class="form-label">Subject</label>
+                            <input type="text" class="form-control" id="subject">
+                        </div>
+                        <div class="mb-3">
+                            <label for="body" class="form-label">Body</label>
+                            <textarea rows="10" type="text" class="form-control" id="body"></textarea>
+                        </div>
 
-                        <dt>To</dt>
-                        <dd th:text="${email.to}"></dd>
-
-                        <dt>Subject</dt>
-                        <dd th:text="${email.subject}"></dd>
-
-                        <dt>Body</dt>
-                        <dd th:text="${toIds}"></dd>
-                    </dl>
-                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                        <a th:href="@{'/compose?to='+${email.from}}" class="btn btn-primary me-md-2"
-                           type="button">Reply</a>
-                        <a th:href="@{'/compose?to='+${toIds}+', '+${email.from}}" class="btn btn-primary"
-                           type="button">Reply All</a>
-                    </div>
-                </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </dl>
 
             </div>
         </div>
