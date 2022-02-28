@@ -79,7 +79,7 @@
                         <dd th:text="${email.subject}"></dd>
 
                         <dt>Body</dt>
-                        <dd th:text="${toIds}"></dd>
+                        <dd th:text="${email.body}"></dd>
                     </dl>
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                         <a th:href="@{'/compose?to='+${email.from}}" class="btn btn-primary me-md-2"

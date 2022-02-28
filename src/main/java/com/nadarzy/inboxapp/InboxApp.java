@@ -9,6 +9,7 @@ import com.nadarzy.inboxapp.emailList.EmailListItemPKey;
 import com.nadarzy.inboxapp.emailList.EmailListItemRepository;
 import com.nadarzy.inboxapp.folders.Folder;
 import com.nadarzy.inboxapp.folders.FolderRepository;
+import com.nadarzy.inboxapp.folders.UnreadEmailStatsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -23,14 +24,14 @@ import java.util.Arrays;
 
 @SpringBootApplication
 @EnableConfigurationProperties(DatastaxAstraProperties.class)
-public class InboxAppApplication {
+public class InboxApp {
   @Autowired FolderRepository folderRepository;
   @Autowired EmailListItemRepository emailListItemRepository;
   @Autowired EmailRepository emailRepository;
+  @Autowired UnreadEmailStatsRepository unreadEmailStatsRepository;
 
   public static void main(String[] args) {
-    ConfigurableApplicationContext applicationContext =
-        SpringApplication.run(InboxAppApplication.class, args);
+    ConfigurableApplicationContext applicationContext = SpringApplication.run(InboxApp.class, args);
     //    System.out.println("########### hi");
     //    folderRepository = applicationContext.getBean(FolderRepository.class);
     //    System.out.println("####################" + folderRepository);
@@ -57,6 +58,8 @@ public class InboxAppApplication {
     folderRepository.save(new Folder("JulianN", "Sent", "green"));
     folderRepository.save(new Folder("JulianN", "Important", "yellow"));
     //    folderRepository.findAll().forEach(System.out::println);
+
+    unreadEmailStatsRepository.incrementUnreadCount("JulianN", "Inbox");
 
     for (int i = 0; i < 10; i++) {
       EmailListItemPKey key = new EmailListItemPKey();
