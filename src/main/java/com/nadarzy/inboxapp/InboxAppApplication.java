@@ -56,7 +56,7 @@ public class InboxAppApplication {
     folderRepository.save(new Folder("JulianN", "Inbox", "blue"));
     folderRepository.save(new Folder("JulianN", "Sent", "green"));
     folderRepository.save(new Folder("JulianN", "Important", "yellow"));
-    folderRepository.findAll().forEach(System.out::println);
+    //    folderRepository.findAll().forEach(System.out::println);
 
     for (int i = 0; i < 10; i++) {
       EmailListItemPKey key = new EmailListItemPKey();
