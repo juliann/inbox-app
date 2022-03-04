@@ -6,6 +6,7 @@ import com.nadarzy.inboxapp.emailList.EmailListItemRepository;
 import com.nadarzy.inboxapp.folders.Folder;
 import com.nadarzy.inboxapp.folders.FolderRepository;
 import com.nadarzy.inboxapp.folders.FolderService;
+import com.nadarzy.inboxapp.folders.UnreadEmailStatsRepository;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
@@ -26,16 +27,19 @@ public class EmailViewController {
   private final FolderService folderService;
   private final EmailListItemRepository emailListItemRepository;
   private final EmailRepository emailRepository;
+  private final UnreadEmailStatsRepository unreadEmailStatsRepository;
 
   public EmailViewController(
       FolderRepository folderRepository,
       FolderService folderService,
       EmailListItemRepository emailListItemRepository,
-      EmailRepository emailRepository) {
+      EmailRepository emailRepository,
+      UnreadEmailStatsRepository unreadEmailStatsRepository) {
     this.folderRepository = folderRepository;
     this.folderService = folderService;
     this.emailListItemRepository = emailListItemRepository;
     this.emailRepository = emailRepository;
+    this.unreadEmailStatsRepository = unreadEmailStatsRepository;
   }
 
   @GetMapping("/emails/{id}")
@@ -51,6 +55,7 @@ public class EmailViewController {
       model.addAttribute("userFolders", userFolders);
       List<Folder> defaultFolders = folderService.fetchDefaultFolders(userId);
       model.addAttribute("defaultFolders", defaultFolders);
+      model.addAttribute("stats", folderService.getMapFolderUnreadCounts(userId));
 
       Optional<Email> optionalEmail = emailRepository.findById(id);
       if (!optionalEmail.isPresent()) {

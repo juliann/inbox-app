@@ -6,6 +6,7 @@ import com.nadarzy.inboxapp.emailList.EmailListItemRepository;
 import com.nadarzy.inboxapp.folders.Folder;
 import com.nadarzy.inboxapp.folders.FolderRepository;
 import com.nadarzy.inboxapp.folders.FolderService;
+import com.nadarzy.inboxapp.folders.UnreadEmailStatsRepository;
 import org.ocpsoft.prettytime.PrettyTime;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -19,6 +20,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /** @author Julian Nadarzy on 10/01/2022 */
@@ -27,14 +29,17 @@ public class InboxController {
   private final FolderRepository folderRepository;
   private final FolderService folderService;
   private final EmailListItemRepository emailListItemRepository;
+  private final UnreadEmailStatsRepository unreadEmailStatsRepository;
 
   public InboxController(
       FolderRepository folderRepository,
       FolderService folderService,
-      EmailListItemRepository emailListItemRepository) {
+      EmailListItemRepository emailListItemRepository,
+      UnreadEmailStatsRepository unreadEmailStatsRepository) {
     this.folderRepository = folderRepository;
     this.folderService = folderService;
     this.emailListItemRepository = emailListItemRepository;
+    this.unreadEmailStatsRepository = unreadEmailStatsRepository;
   }
 
   @GetMapping("/")
@@ -52,7 +57,8 @@ public class InboxController {
       model.addAttribute("userFolders", userFolders);
       List<Folder> defaultFolders = folderService.fetchDefaultFolders(userName);
       model.addAttribute("defaultFolders", defaultFolders);
-
+      Map<String, Integer> mapFolderUnreadCounts = folderService.getMapFolderUnreadCounts(userName);
+      model.addAttribute("stats", mapFolderUnreadCounts);
       // fetch messages
       if (!StringUtils.hasText(folder)) {
         folder = "Inbox";
