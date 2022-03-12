@@ -84,8 +84,12 @@ public class EmailViewController {
         }
 
         EmailListItem emailListItem = optionalEmailListItem.get();
+        System.out.println(
+            "#################" + emailListItem.getId() + " " + emailListItem.isRead());
         if (!emailListItem.isRead()) {
           unreadEmailStatsRepository.decrementUnreadCount(userId, folder);
+          System.out.println(
+              "########### in !emailListItem.isRead()" + userId + " folder: " + folder);
         }
         emailListItem.setRead(true);
         emailListItemRepository.save(emailListItem);

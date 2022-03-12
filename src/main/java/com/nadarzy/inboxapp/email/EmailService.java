@@ -29,11 +29,12 @@ public class EmailService {
     to.forEach(
         toId -> {
           EmailListItem item = createEmailListItem(to, email, toId, "Inbox", from);
+          item.setRead(false);
           emailListItemRepository.save(item);
           unreadEmailStatsRepository.incrementUnreadCount(toId, "Inbox");
         });
     EmailListItem sentItemsEntry = createEmailListItem(to, email, from, "Sent", from);
-    sentItemsEntry.setRead(false);
+    sentItemsEntry.setRead(true);
     emailListItemRepository.save(sentItemsEntry);
   }
 
@@ -48,7 +49,7 @@ public class EmailService {
     item.setFrom(from);
     item.setSubject(email.getSubject());
     item.setTo(to);
-    item.setRead(true);
+
     return item;
   }
 }
