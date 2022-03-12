@@ -57,12 +57,17 @@ public class InboxController {
       model.addAttribute("userFolders", userFolders);
       List<Folder> defaultFolders = folderService.fetchDefaultFolders(userName);
       model.addAttribute("defaultFolders", defaultFolders);
+      if (userFolders.size() > 0) {
+        model.addAttribute("userFolders", userFolders);
+      }
+
       Map<String, Integer> mapFolderUnreadCounts = folderService.getMapFolderUnreadCounts(userName);
       model.addAttribute("folderToUnreadCounts", mapFolderUnreadCounts);
       // fetch messages
       if (!StringUtils.hasText(folder)) {
         folder = "Inbox";
       }
+      model.addAttribute("currentFolder", folder);
 
       List<EmailListItem> emails =
           emailListItemRepository.findAllById_UserIdAndId_Label(userName, folder);

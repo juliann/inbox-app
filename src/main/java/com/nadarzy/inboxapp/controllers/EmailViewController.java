@@ -61,33 +61,40 @@ public class EmailViewController {
       model.addAttribute("userFolders", userFolders);
       List<Folder> defaultFolders = folderService.fetchDefaultFolders(userId);
       model.addAttribute("defaultFolders", defaultFolders);
-      model.addAttribute("folderToUnreadCounts", folderService.getMapFolderUnreadCounts(userId));
 
-      Optional<Email> optionalEmail = emailRepository.findById(id);
-      if (!optionalEmail.isPresent()) {
-        return "inbox-page";
-      }
-      Email email = optionalEmail.get();
-      model.addAttribute("email", email);
-      String toIds = String.join(", ", email.getTo());
-      model.addAttribute("toIds", toIds);
+      try {
 
-      EmailListItemPKey emailListItemPKey = new EmailListItemPKey();
-      emailListItemPKey.setUserId(userId);
-      emailListItemPKey.setLabel(folder);
-      emailListItemPKey.setTimeId(email.getId());
-      Optional<EmailListItem> optionalEmailListItem =
-          emailListItemRepository.findById(emailListItemPKey);
-      if (optionalEmailListItem.isPresent()) {
+        Optional<Email> optionalEmail = emailRepository.findById(id);
+        if (!optionalEmail.isPresent()) {
+          return "inbox-page";
+        }
+        Email email = optionalEmail.get();
+        model.addAttribute("email", email);
+        String toIds = String.join(", ", email.getTo());
+        model.addAttribute("toIds", toIds);
+
+        EmailListItemPKey emailListItemPKey = new EmailListItemPKey();
+        emailListItemPKey.setUserId(userId);
+        emailListItemPKey.setLabel(folder);
+        emailListItemPKey.setTimeId(email.getId());
+        Optional<EmailListItem> optionalEmailListItem =
+            emailListItemRepository.findById(emailListItemPKey);
+        if (!optionalEmailListItem.isPresent()) {
+          throw new IllegalArgumentException();
+        }
+
         EmailListItem emailListItem = optionalEmailListItem.get();
-        if (emailListItem.isRead()) {
-          emailListItem.setRead(false);
-          emailListItemRepository.save(emailListItem);
+        if (!emailListItem.isRead()) {
           unreadEmailStatsRepository.decrementUnreadCount(userId, folder);
         }
-      }
+        emailListItem.setRead(true);
+        emailListItemRepository.save(emailListItem);
+        model.addAttribute("folderToUnreadCounts", folderService.getMapFolderUnreadCounts(userId));
 
-      return "email-page";
+        return "email-page";
+      } catch (IllegalArgumentException e) {
+        return "inbox-page";
+      }
     }
   }
 }
