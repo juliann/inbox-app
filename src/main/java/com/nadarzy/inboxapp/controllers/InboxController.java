@@ -58,16 +58,16 @@ public class InboxController {
       List<Folder> defaultFolders = folderService.fetchDefaultFolders(userName);
       model.addAttribute("defaultFolders", defaultFolders);
       Map<String, Integer> mapFolderUnreadCounts = folderService.getMapFolderUnreadCounts(userName);
-      model.addAttribute("stats", mapFolderUnreadCounts);
+      model.addAttribute("folderToUnreadCounts", mapFolderUnreadCounts);
       // fetch messages
       if (!StringUtils.hasText(folder)) {
         folder = "Inbox";
       }
 
-      List<EmailListItem> emailList =
+      List<EmailListItem> emails =
           emailListItemRepository.findAllById_UserIdAndId_Label(userName, folder);
       PrettyTime prettyTime = new PrettyTime();
-      emailList.stream()
+      emails.stream()
           .forEach(
               emailListItem -> {
                 UUID timeUuid = emailListItem.getId().getTimeId();
@@ -78,7 +78,7 @@ public class InboxController {
                 String timeSent = prettyTime.format(localDateTime);
                 emailListItem.setTimeSent(timeSent);
               });
-      model.addAttribute("emailList", emailList);
+      model.addAttribute("folderEmails", emails);
       model.addAttribute("folderName", folder);
       return "inbox-page";
     }

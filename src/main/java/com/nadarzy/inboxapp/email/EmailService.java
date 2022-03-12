@@ -28,26 +28,27 @@ public class EmailService {
 
     to.forEach(
         toId -> {
-          EmailListItem item = createEmailListItem(to, email, toId, "Inbox");
+          EmailListItem item = createEmailListItem(to, email, toId, "Inbox", from);
           emailListItemRepository.save(item);
           unreadEmailStatsRepository.incrementUnreadCount(toId, "Inbox");
         });
-    EmailListItem sentItemsEntry = createEmailListItem(to, email, from, "Sent");
-    sentItemsEntry.setUnread(false);
+    EmailListItem sentItemsEntry = createEmailListItem(to, email, from, "Sent", from);
+    sentItemsEntry.setRead(false);
     emailListItemRepository.save(sentItemsEntry);
   }
 
   private EmailListItem createEmailListItem(
-      List<String> to, Email email, String toId, String folder) {
+      List<String> to, Email email, String toId, String folder, String from) {
     EmailListItemPKey key = new EmailListItemPKey();
     key.setTimeId(email.getId());
     key.setUserId(toId);
     key.setLabel(folder);
     EmailListItem item = new EmailListItem();
     item.setId(key);
+    item.setFrom(from);
     item.setSubject(email.getSubject());
     item.setTo(to);
-    item.setUnread(true);
+    item.setRead(true);
     return item;
   }
 }

@@ -17,7 +17,7 @@
                 class="list-group-item d-flex justify-content-between align-items-center">
                 <a th:href="@{'/?folder='+${folder.label}}" th:text="${folder.label}">Label</a>
 
-                <span class="badge badge-primary badge-pill" th:text="${stats.get(folder.label)}"></span>
+                <span th:if="${folderToUnreadCounts.get(folder.label)}" th:text="${folderToUnreadCounts.get(folder.label)}" class="badge bg-primary rounded-pill">15</span>
             </li>
 
         </ul>

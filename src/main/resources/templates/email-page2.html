@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Email</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+            crossorigin="anonymous"></script>
+    <style>
+        .container {
+            display: grid;
+
+            grid-template-areas:
+          "header header header"
+          "nav content content"
+          "footer footer footer";
+
+            grid-template-columns: 300px 1fr;
+            grid-template-rows: auto 1fr auto;
+            grid-gap: 10px;
+
+            height: 100vh;
+        }
+
+        header {
+            grid-area: header;
+        }
+
+        nav {
+            grid-area: nav;
+            margin-left: 0.5rem;
+        }
+
+        main {
+            grid-area: content;
+        }
+
+        footer {
+            grid-area: footer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Welcome, Name</h1>
+    </header>
+    <nav>
+        <div class="card">
+            <a href="/compose" class="btn btn-primary">Compose message</a>
+        </div>
+        <div
+                th:insert="components/folder-list :: folder-list (panelName = 'Folders', folders = ${defaultFolders} )"
+        ></div>
+        <div
+                th:insert="components/folder-list :: folder-list (panelName = 'My folders', folders = ${userFolders})"
+        ></div>
+    </nav>
+    <main>
+
+
+        <div class="card" th:if="${email}">
+            <div class="card-header">
+                View Email
+            </div>
+            <div>
+                <div class="card-body">
+                    <dl>
+                        <dt>From</dt>
+                        <dd th:text="${email.from}"></dd>
+
+                        <dt>To</dt>
+                        <dd th:text="${email.to}"></dd>
+
+                        <dt>Subject</dt>
+                        <dd th:text="${email.subject}"></dd>
+
+                        <dt>Body</dt>
+                        <dd th:text="${email.body}"></dd>
+                    </dl>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a th:href="@{'/compose?to='+${email.from}}" class="btn btn-primary me-md-2"
+                           type="button">Reply</a>
+                        <a th:href="@{'/compose?to='+${toIds}+', '+${email.from}}" class="btn btn-primary"
+                           type="button">Reply All</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>

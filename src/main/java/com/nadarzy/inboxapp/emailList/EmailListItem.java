@@ -15,6 +15,9 @@ public class EmailListItem {
 
   @PrimaryKey private EmailListItemPKey id;
 
+  @CassandraType(type = CassandraType.Name.TEXT)
+  private String from;
+
   @CassandraType(type = Name.LIST, typeArguments = Name.TEXT)
   private List<String> to;
 
@@ -22,7 +25,7 @@ public class EmailListItem {
   private String subject;
 
   @CassandraType(type = Name.BOOLEAN)
-  private boolean isUnread;
+  private boolean isRead;
 
   @Transient private String timeSent;
 
@@ -32,6 +35,14 @@ public class EmailListItem {
 
   public void setTimeSent(String timeSent) {
     this.timeSent = timeSent;
+  }
+
+  public String getFrom() {
+    return from;
+  }
+
+  public void setFrom(String from) {
+    this.from = from;
   }
 
   public EmailListItemPKey getId() {
@@ -58,11 +69,11 @@ public class EmailListItem {
     this.subject = subject;
   }
 
-  public boolean isUnread() {
-    return isUnread;
+  public boolean isRead() {
+    return isRead;
   }
 
-  public void setUnread(boolean unread) {
-    isUnread = unread;
+  public void setRead(boolean read) {
+    isRead = read;
   }
 }
