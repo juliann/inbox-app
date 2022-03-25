@@ -10,7 +10,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-/** @author Julian Nadarzy on 28/02/2022 */
+/**
+ * @author Julian Nadarzy on 28/02/2022
+ */
 @Service
 public class EmailService {
   @Autowired private EmailRepository emailRepository;
@@ -25,7 +27,7 @@ public class EmailService {
     email.setFrom(from);
     email.setId(Uuids.timeBased());
     emailRepository.save(email);
-
+    System.out.println("this is the sender of the email: " + from);
     to.forEach(
         toId -> {
           EmailListItem item = createEmailListItem(to, email, toId, "Inbox", from);

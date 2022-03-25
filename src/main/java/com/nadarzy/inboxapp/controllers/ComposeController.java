@@ -20,7 +20,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-/** @author Julian Nadarzy on 26/02/2022 */
+/**
+ * @author Julian Nadarzy on 26/02/2022
+ */
 @Controller
 public class ComposeController {
 
@@ -82,7 +84,8 @@ public class ComposeController {
       return new ModelAndView("redirect:/");
     } else {
 
-      String from = principal.getAttribute("login");
+      //      String from = principal.getAttribute("login");
+      String from = principal.getAttribute("name");
       List<String> toIds = splitIds(formData.getFirst("toIds"));
       String subject = formData.getFirst("subject");
       String body = formData.getFirst("body");

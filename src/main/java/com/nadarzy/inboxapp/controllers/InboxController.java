@@ -23,7 +23,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-/** @author Julian Nadarzy on 10/01/2022 */
+/**
+ * @author Julian Nadarzy on 10/01/2022
+ */
 @Controller
 public class InboxController {
   private final FolderRepository folderRepository;
@@ -51,7 +53,7 @@ public class InboxController {
       return "index";
     } else {
       String userName = principal.getAttribute("name");
-
+      System.out.println("###########username is: " + userName);
       // fetch folders
       List<Folder> userFolders = folderRepository.findAllById(userName);
       model.addAttribute("userFolders", userFolders);
