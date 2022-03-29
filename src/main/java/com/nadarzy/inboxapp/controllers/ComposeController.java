@@ -46,6 +46,7 @@ public class ComposeController {
       return "index";
     } else {
       String userId = principal.getAttribute("name");
+      model.addAttribute("userName", userId);
 
       // fetch folders
       List<Folder> userFolders = folderRepository.findAllById(userId);

@@ -54,6 +54,7 @@ public class InboxController {
     } else {
       String userName = principal.getAttribute("name");
       System.out.println("###########username is: " + userName);
+      model.addAttribute("userName", userName);
       // fetch folders
       List<Folder> userFolders = folderRepository.findAllById(userName);
       model.addAttribute("userFolders", userFolders);

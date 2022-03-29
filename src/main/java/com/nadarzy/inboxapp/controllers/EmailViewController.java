@@ -22,7 +22,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-/** @author Julian Nadarzy on 05/02/2022 */
+/**
+ * @author Julian Nadarzy on 05/02/2022
+ */
 @Controller
 public class EmailViewController {
 
@@ -55,7 +57,7 @@ public class EmailViewController {
       return "index";
     } else {
       String userId = principal.getAttribute("name");
-
+      model.addAttribute("userName", userId);
       // fetch folders
       List<Folder> userFolders = folderRepository.findAllById(userId);
       model.addAttribute("userFolders", userFolders);
@@ -72,6 +74,11 @@ public class EmailViewController {
         model.addAttribute("email", email);
         String toIds = String.join(", ", email.getTo());
         model.addAttribute("toIds", toIds);
+
+        // check if user is allowed to see email (user is either sender or recipient of email)
+        if (!userId.equals(email.getFrom()) && !email.getTo().contains(userId)) {
+          return "redirect:/";
+        }
 
         EmailListItemPKey emailListItemPKey = new EmailListItemPKey();
         emailListItemPKey.setUserId(userId);

@@ -57,6 +57,12 @@ public class InboxApp {
     folderRepository.save(new Folder("JulianN", "Family", "yellow"));
     //    folderRepository.findAll().forEach(System.out::println);
 
+    emailService.sendEmail(
+        "abc",
+        Arrays.asList("def", "abc"),
+        "Hello",
+        "this is the email body of email with no user");
+
     for (int i = 0; i < 10; i++) {
 
       emailService.sendEmail(
