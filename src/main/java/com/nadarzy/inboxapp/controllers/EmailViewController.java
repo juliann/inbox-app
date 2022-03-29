@@ -2,6 +2,7 @@ package com.nadarzy.inboxapp.controllers;
 
 import com.nadarzy.inboxapp.email.Email;
 import com.nadarzy.inboxapp.email.EmailRepository;
+import com.nadarzy.inboxapp.email.EmailService;
 import com.nadarzy.inboxapp.emailList.EmailListItem;
 import com.nadarzy.inboxapp.emailList.EmailListItemPKey;
 import com.nadarzy.inboxapp.emailList.EmailListItemRepository;
@@ -33,18 +34,21 @@ public class EmailViewController {
   private final EmailListItemRepository emailListItemRepository;
   private final EmailRepository emailRepository;
   private final UnreadEmailStatsRepository unreadEmailStatsRepository;
+  private final EmailService emailService;
 
   public EmailViewController(
       FolderRepository folderRepository,
       FolderService folderService,
       EmailListItemRepository emailListItemRepository,
       EmailRepository emailRepository,
-      UnreadEmailStatsRepository unreadEmailStatsRepository) {
+      UnreadEmailStatsRepository unreadEmailStatsRepository,
+      EmailService emailService) {
     this.folderRepository = folderRepository;
     this.folderService = folderService;
     this.emailListItemRepository = emailListItemRepository;
     this.emailRepository = emailRepository;
     this.unreadEmailStatsRepository = unreadEmailStatsRepository;
+    this.emailService = emailService;
   }
 
   @GetMapping("/email/{id}")
@@ -75,8 +79,7 @@ public class EmailViewController {
         String toIds = String.join(", ", email.getTo());
         model.addAttribute("toIds", toIds);
 
-        // check if user is allowed to see email (user is either sender or recipient of email)
-        if (!userId.equals(email.getFrom()) && !email.getTo().contains(userId)) {
+        if (!emailService.doesHaveAccess(email, userId)) {
           return "redirect:/";
         }
 

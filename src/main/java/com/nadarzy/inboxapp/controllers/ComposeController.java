@@ -1,5 +1,7 @@
 package com.nadarzy.inboxapp.controllers;
 
+import com.nadarzy.inboxapp.email.Email;
+import com.nadarzy.inboxapp.email.EmailRepository;
 import com.nadarzy.inboxapp.email.EmailService;
 import com.nadarzy.inboxapp.folders.Folder;
 import com.nadarzy.inboxapp.folders.FolderRepository;
@@ -16,9 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Julian Nadarzy on 26/02/2022
@@ -29,19 +29,25 @@ public class ComposeController {
   private final FolderRepository folderRepository;
   private final FolderService folderService;
   private final EmailService emailService;
+  private final EmailRepository emailRepository;
 
   public ComposeController(
-      FolderRepository folderRepository, FolderService folderService, EmailService emailService) {
+      FolderRepository folderRepository,
+      FolderService folderService,
+      EmailService emailService,
+      EmailRepository emailRepository) {
     this.folderRepository = folderRepository;
     this.folderService = folderService;
     this.emailService = emailService;
+    this.emailRepository = emailRepository;
   }
 
   @GetMapping("/compose")
   public String getComposePage(
       @AuthenticationPrincipal OAuth2User principal,
       Model model,
-      @RequestParam(required = false) String to) {
+      @RequestParam(required = false) String to,
+      @RequestParam(required = false) UUID id) {
     if (principal == null || !StringUtils.hasText(principal.getAttribute("login"))) {
       return "index";
     } else {
@@ -57,6 +63,14 @@ public class ComposeController {
       List<String> uniqueIds = splitIds(to);
       model.addAttribute("toIds", String.join(", ", uniqueIds));
 
+      Optional<Email> optionalEmail = emailRepository.findById(id);
+      if (optionalEmail.isPresent()) {}
+      Email email = optionalEmail.get();
+      if (emailService.doesHaveAccess(email, userId)) {
+        model.addAttribute("subject", emailService.getReplySubject(email));
+        model.addAttribute("body", emailService.getReplyBody(email));
+      }
+      String toIds = String.join(",", email.getTo());
       return "compose-page";
     }
   }

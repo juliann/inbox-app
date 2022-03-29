@@ -8,6 +8,9 @@ import com.nadarzy.inboxapp.folders.UnreadEmailStatsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 /**
@@ -53,5 +56,25 @@ public class EmailService {
     item.setTo(to);
 
     return item;
+  }
+
+  public boolean doesHaveAccess(Email email, String userId) {
+    return email.getFrom().equals(userId) || email.getTo().contains(userId);
+  }
+
+  public String getReplySubject(Email email) {
+    System.out.println("this is the subject of the email: " + email.getSubject());
+    return "Re: " + email.getSubject();
+  }
+
+  public String getReplyBody(Email email) {
+    return "\n\n\n-------------------------------\n"
+        + "On "
+        + LocalDateTime.ofInstant(
+            Instant.ofEpochMilli(Uuids.unixTimestamp(email.getId())), ZoneId.systemDefault())
+        + " "
+        + email.getFrom()
+        + " wrote:\n\n"
+        + email.getBody();
   }
 }
